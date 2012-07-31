@@ -4,7 +4,7 @@
 
 ;; Author: Jonas Bernoulli <jonas@bernoul.li>
 ;; Created: 20100304
-;; Version: 0.1_alpha1
+;; Version: 0.1.0
 ;; Homepage: http://github.com/tarsius/ministrut
 ;; Keywords: minibuffer
 
@@ -32,21 +32,19 @@
 ;; This package creates a dedicated minibuffer frame and also removes
 ;; it's X11 window decoration and sets it up as an X11 strut.
 
-;; This is an alpha release and not all desired features have been
-;; implemented yet.  If you would like to try it anyway add something
-;; like this to your init file:
+;; Add something like this to your init file.
 
-;; (add-to-list 'load-path "/path/to/ministrut/")
-;; (require 'ministrut)
-;; (setq mstrut-minibuffer-frame-alist
-;;       '((left         .  853)
-;;         (top          . 1600)
-;;         (width        .  190)
-;;         (height       .    1)
-;;         (strut-bottom .   18)
-;;         (left-fringe  .    0)
-;;         (right-fringe .    0)))
-;; (ministrut-mode 1)
+;;   (add-to-list 'load-path "/path/to/ministrut/")
+;;   (require 'ministrut)
+;;   (setq mstrut-minibuffer-frame-alist
+;;         '((left         .  853)
+;;           (top          . 1600)
+;;           (width        .  190)
+;;           (height       .    1)
+;;           (strut-bottom .   18)
+;;           (left-fringe  .    0)
+;;           (right-fringe .    0)))
+;;   (ministrut-mode 1)
 
 ;; I use this with a screen resolution of 2560x1600 and the window
 ;; manager wmii.  Also note that I do not use the whole wide of the
@@ -55,17 +53,23 @@
 ;; Your window manager might have to be configure too.  For wmii add
 ;; this to the tagrules:
 
-;; /Emacs Minibuffer/ -> ~
+;;   /Emacs Minibuffer/ -> ~
 
-;; Previously I have created `xmonad.el' which had more features but was
-;; tailored towards xmonad only.  Since I have switched back to wmii and
-;; would like to try other window managers as well I have decided to write
-;; this library instead, which theoretically should be usable with any
-;; window manager.
 
-;; However at least xmonad does focus the minibuffer frame when reading
-;; input from it which actually is not correct.  Similar problems are to
-;; be expected with other window managers as well.
+
+;; *********************** Bit Rot Warning ************************
+;;
+;; Please note that the author ended up not using this library.  It
+;; was a usable proof of concept but ist lacking some features and
+;; polish.  However if you are looking for functionality similar to
+;; that described above and cannot find anything else your are most
+;; likely better of basing it on this library than starting from
+;; scratch.  If so you might also want to look at `xmonad.el' which
+;; was my first attempt (https://github.com/emacsattic/xmonad).
+;;
+;; *********************** Bit Rot Warning ************************
+
+
 
 ;;; Code:
 
