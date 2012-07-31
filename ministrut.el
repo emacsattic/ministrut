@@ -1,10 +1,9 @@
 ;;; ministrut.el -- Dedicated minibuffer frame as X11 strut
 
-;; Copyright (C) 2010  Jonas Bernoulli
+;; Copyright (C) 2010-2012  Jonas Bernoulli
 
 ;; Author: Jonas Bernoulli <jonas@bernoul.li>
 ;; Created: 20100304
-;; Updated: 20100304
 ;; Version: 0.1_alpha1
 ;; Homepage: http://github.com/tarsius/ministrut
 ;; Keywords: minibuffer
@@ -87,8 +86,8 @@ geometry of the frame.  Additionally at least two of the strut properties
 have to be specified.  See the variable `mstrut-strut-properties' and
 http://standards.freedesktop.org/wm-spec/1.3/ar01s05.html#id2523368."
   :type '(repeat (cons :format "%v"
-		       (symbol :tag "Parameter")
-		       (sexp :tag "Value")))
+                       (symbol :tag "Parameter")
+                       (sexp :tag "Value")))
   :group 'ministrut)
 
 (defcustom mstrut-default-frame-alist nil
@@ -103,8 +102,8 @@ The parameters specified here supersede the values given in the associated
 value of the key `x' of the alist `window-system-default-frame-alist'
 which in turn supersede the values given in `default-frame-alist'."
   :type '(repeat (cons :format "%v"
-		       (symbol :tag "Parameter")
-		       (sexp :tag "Value")))
+                       (symbol :tag "Parameter")
+                       (sexp :tag "Value")))
   :group 'ministrut)
 
 (defconst mstrut--net-wm-strut-partial
@@ -128,56 +127,59 @@ it for minibuffer input will keep doing so.  However new frames will
 behave as expected."
   :global t
   (cond (ministrut-mode
-	 (put 'minibuffer-auto-raise 'default-value minibuffer-auto-raise)
-	 (setq minibuffer-auto-raise t)
-	 (unless (assq 'mstrut-end minibuffer-frame-alist)
-	   (setq minibuffer-frame-alist
-		 (append '((title . "Emacs Minibuffer"))
-			 mstrut-minibuffer-frame-alist
-			 '((minibuffer . only)
-			   (mstrut-end))
-			 minibuffer-frame-alist)))
-	 (mstrut-make-minibuffer-frame)
-	 (let* ((ass (assq 'x window-system-default-frame-alist))
-	 	(old (cdr ass))
-	 	(new (append mstrut-default-frame-alist
-			     '((minibuffer . nil)
-			       (mstrut-end))
-			     old)))
-	   (if ass
-	       (setcdr ass new)
-	     (push (cons 'x new) window-system-default-frame-alist))))
-	(t
-	 (setq minibuffer-frame-alist
-	       (cdr (member '(mstrut-end) minibuffer-frame-alist)))
-	 (setq window-system-default-frame-alist
-	       (cdr (member '(mstrut-end) window-system-default-frame-alist)))
-	 (modify-all-frames-parameters '((minibuffer . t)))
-	 ;; TODO Replace existing minibuffer-less frames so that
-	 ;; the dedicated minibuffer frame can be removed and all
-	 ;; frames have their own minibuffer again.
-	 ;; (delete-frame default-minibuffer-frame)
-	 )))
+         (put 'minibuffer-auto-raise 'default-value minibuffer-auto-raise)
+         (setq minibuffer-auto-raise t)
+         (unless (assq 'mstrut-end minibuffer-frame-alist)
+           (setq minibuffer-frame-alist
+                 (append '((title . "Emacs Minibuffer"))
+                         mstrut-minibuffer-frame-alist
+                         '((minibuffer . only)
+                           (mstrut-end))
+                         minibuffer-frame-alist)))
+         (mstrut-make-minibuffer-frame)
+         (let* ((ass (assq 'x window-system-default-frame-alist))
+                (old (cdr ass))
+                (new (append mstrut-default-frame-alist
+                             '((minibuffer . nil)
+                               (mstrut-end))
+                             old)))
+           (if ass
+               (setcdr ass new)
+             (push (cons 'x new) window-system-default-frame-alist))))
+        (t
+         (setq minibuffer-frame-alist
+               (cdr (member '(mstrut-end) minibuffer-frame-alist)))
+         (setq window-system-default-frame-alist
+               (cdr (member '(mstrut-end) window-system-default-frame-alist)))
+         (modify-all-frames-parameters '((minibuffer . t)))
+         ;; TODO Replace existing minibuffer-less frames so that
+         ;; the dedicated minibuffer frame can be removed and all
+         ;; frames have their own minibuffer again.
+         ;; (delete-frame default-minibuffer-frame)
+         )))
 
 (defun mstrut-make-minibuffer-frame (&optional display)
   "Setup the default minibuffer frame."
   (let* ((parms (append minibuffer-frame-alist
-			'((minibuffer . only))))
-	 (frame (if display
-		    (make-frame-on-display display parms)
-		  (make-frame parms)))
-	 geometry make-strut-p)
+                        '((minibuffer . only))))
+         (frame (if display
+                    (make-frame-on-display display parms)
+                  (make-frame parms)))
+         geometry make-strut-p)
     (dolist (key (reverse mstrut--net-wm-strut-partial))
       (let ((val (cdr (assoc key mstrut-minibuffer-frame-alist))))
-	(push (or val 0) geometry)
-	(when val
-	  (setq make-strut-p t))))
+        (push (or val 0) geometry)
+        (when val
+          (setq make-strut-p t))))
     (when make-strut-p
       (x-change-window-property "_NET_WM_STRUT_PARTIAL" geometry frame
-				"CARDINAL" 32 t))
+                                "CARDINAL" 32 t))
     (x-change-window-property "_MOTIF_WM_HINTS" '(2 0 0 0 0) frame
-			      "_MOTIF_WM_HINTS" 32 t)
+                              "_MOTIF_WM_HINTS" 32 t)
     (setq default-minibuffer-frame frame)))
 
 (provide 'ministrut)
+;; Local Variables:
+;; indent-tabs-mode: nil
+;; End:
 ;;; ministrut.el ends here
